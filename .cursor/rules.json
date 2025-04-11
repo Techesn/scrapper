@@ -1,0 +1,58 @@
+{
+    "name": "MERN Stack App - Hugo",
+    "description": "Projet MERN sur Windows, architecture backend/frontend, usage Claude Sonnet 3.7 via API.",
+    "rules": [
+      {
+        "pattern": "frontend/**/*.jsx",
+        "instructions": [
+          "Utilise React avec des composants en PascalCase.",
+          "Pas de styles inline, utilise CSS Modules ou styled-components si besoin.",
+          "Ne place aucune logique métier ici (seulement affichage, props, hooks légers).",
+          "Ne crée pas de fonctionnalités qui ne sont pas explicitement décrites.",
+          "Assure-toi que chaque composant est bien réutilisable et isolé.",
+          "Utilise les hooks React uniquement si c’est nécessaire au fonctionnement décrit.",
+          "Ne dépasse pas le strict nécessaire dans chaque composant."
+        ]
+      },
+      {
+        "pattern": "frontend/**/*.js",
+        "instructions": [
+          "N'utilise que les fonctions nécessaires à l'UI ou aux appels API définis.",
+          "Pas de logique inventée, seulement des fonctions basées sur les besoins réels du projet.",
+          "Utilise camelCase pour les fonctions et variables.",
+          "N'utilise pas de bibliothèques non mentionnées dans le contexte."
+        ]
+      },
+      {
+        "pattern": "backend/**/*.js",
+        "instructions": [
+          "Utilise une structure Express avec des fichiers séparés : routes, controllers, services, models.",
+          "Préfère Mongoose pour les modèles MongoDB.",
+          "Respecte une architecture MVC.",
+          "Utilise async/await pour les appels asynchrones.",
+          "N'invente jamais de logique métier ou de fonctionnalité non explicitement décrite.",
+          "Utilise camelCase pour les fonctions, PascalCase pour les classes."
+        ]
+      },
+      {
+        "pattern": "**/*.js",
+        "instructions": [
+          "Indentation 2 espaces, guillemets simples, point-virgule en fin de ligne.",
+          "Documente les fonctions critiques avec JSDoc si nécessaire.",
+          "Sois concis : pas de code inutile, pas de complexité gratuite.",
+          "Respecte le paradigme fonctionnel quand c’est pertinent (éviter les effets de bord)."
+        ]
+      },
+      {
+        "pattern": "**",
+        "instructions": [
+          "Le projet utilise Claude Sonnet 3.7 via API — ne pas halluciner de fonctionnalités.",
+          "Tu es sur Windows, donc les commandes terminal doivent être PowerShell (`npm run dev`, pas `./node_modules/.bin/...`).",
+          "Assure-toi que toute génération de code respecte les chemins `frontend/` et `backend/`.",
+          "Toujours vérifier que la fonctionnalité est bien décrite avant de proposer une implémentation.",
+          "Tu peux utiliser des commentaires TODO seulement si c’est vraiment justifié et que l’action est décrite ailleurs."
+        ]
+      }
+    ]
+  }
+  

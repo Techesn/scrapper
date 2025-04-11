@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <%- include('partials/head') %>
+  <title>Formats d'Email d'Entreprise</title>
+</head>
+<body>
+  <%- include('partials/header') %>
+  
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-6">Formats d'Email d'Entreprise</h1>
+    
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Entreprises à Formater</h2>
+        <div id="companies-to-format" class="bg-white shadow rounded p-4">
+          <!-- Liste dynamique des entreprises à formater -->
+        </div>
+      </div>
+      
+      <div>
+        <h2 class="text-xl font-semibold mb-4">Entreprises Formatées</h2>
+        <div id="formatted-companies" class="bg-white shadow rounded p-4">
+          <!-- Liste dynamique des entreprises formatées -->
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-6 bg-white shadow rounded p-6">
+      <h2 class="text-xl font-semibold mb-4">Définir un Format d'Email</h2>
+      <form id="email-format-form" class="space-y-4">
+        <div>
+          <label class="block mb-2">Nom de l'Entreprise</label>
+          <input 
+            type="text" 
+            id="company-name" 
+            required 
+            class="w-full p-2 border rounded"
+          >
+        </div>
+        
+        <div>
+          <label class="block mb-2">Format d'Email</label>
+          <select 
+            id="email-format" 
+            required 
+            class="w-full p-2 border rounded"
+          >
+            <!-- Options générées dynamiquement -->
+          </select>
+        </div>
+        
+        <div>
+          <label class="block mb-2">Domaine Email</label>
+          <input 
+            type="text" 
+            id="email-domain" 
+            required 
+            class="w-full p-2 border rounded"
+          >
+        </div>
+        
+        <button 
+          type="submit" 
+          class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        >
+          Enregistrer le Format
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+  <script src="/js/services/api-service.js"></script>
+  <script src="/js/pages/company-email-formats.js"></script>
+</body>
+</html>

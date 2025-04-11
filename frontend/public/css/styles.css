@@ -1,0 +1,61 @@
+/* Styles personnalisés en complément de Tailwind CSS */
+
+.nav-item.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #3b82f6;
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .content-section {
+    display: none;
+  }
+  
+  .content-section.active {
+    display: block;
+  }
+  
+  /* Animation de chargement */
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 5px solid rgba(59, 130, 246, 0.2);
+    border-radius: 50%;
+    border-top-color: #3b82f6;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Style pour les cards */
+  .stat-card {
+    transition: transform 0.2s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Style pour l'indicateur de statut */
+  .status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .status-idle { background-color: #9ca3af; }
+  .status-running { background-color: #22c55e; }
+  .status-paused { background-color: #eab308; }
+  .status-error { background-color: #ef4444; }
+  .status-completed { background-color: #3b82f6; }

@@ -1,0 +1,39 @@
+{
+    "name": "linkedin-sales-navigator-scraper",
+    "version": "1.0.0",
+    "description": "Script d'automatisation pour scraper des données de prospects depuis LinkedIn Sales Navigator",
+    "main": "backend/server.js",
+    "scripts": {
+        "start": "node backend/server.js",
+        "dev": "nodemon backend/server.js"
+    },
+    "keywords": [
+        "linkedin",
+        "sales-navigator",
+        "scraper",
+        "puppeteer",
+        "automation"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.8.4",
+        "body-parser": "^1.20.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "moment": "^2.30.1",
+        "mongoose": "^8.13.2",
+        "node-fetch": "^2.6.9",
+        "puppeteer": "^22.3.0",
+        "puppeteer-extra": "^3.3.6",
+        "puppeteer-extra-plugin-stealth": "^2.11.2",
+        "socket.io": "^4.7.2",
+        "uuid": "^9.0.1",
+        "winston": "^3.11.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.3"
+    }
+}
