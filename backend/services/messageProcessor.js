@@ -180,8 +180,14 @@ class MessageProcessor {
         return false;
       }
       
+      // Récupérer le prénom pour la personnalisation
+      // Utiliser 'Prospect' comme fallback si le prénom n'est pas disponible
+      const firstName = message.prospectId.firstName || '';
+      const greeting = `Bonjour ${firstName},\nJ'espère que vous allez bien\n\n`;
+      const fullMessageContent = greeting + message.messageContent;
+
       // Envoyer le message
-      const result = await messageService.sendMessage(profileUrl, message.messageContent);
+      const result = await messageService.sendMessage(profileUrl, fullMessageContent);
       
       // Mettre à jour le statut du message
       if (result.success) {
