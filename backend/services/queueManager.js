@@ -54,6 +54,12 @@ class QueueManager {
           throw new Error(`Statut de prospect ${prospectSequenceStatusId} introuvable`);
         }
         
+        // Récupérer le prospect pour avoir son prénom
+        const prospect = await require('mongoose').model('Prospect').findById(prospectStatus.prospectId);
+        if (!prospect) {
+          throw new Error(`Prospect ${prospectStatus.prospectId} introuvable`);
+        }
+        
         // Vérifier et optimiser la date planifiée
         // Si elle est en dehors des plages horaires de travail, la déplacer
         if (scheduledDate && !timeService.isTimeInWorkingHours(scheduledDate, 'message')) {
@@ -64,12 +70,15 @@ class QueueManager {
           logger.info(`Date d'envoi recalculée: ${scheduledDate.toISOString()}`);
         }
         
+        // Ajouter le préfixe au message
+        const prefixedContent = `Bonjour ${prospect.firstName},\n\nJ'espère que vous allez bien.\n\n${content}`;
+        
         // Ajouter le message à la file d'attente
         const queuedMessage = await MessageQueue.create({
           prospectId: prospectStatus.prospectId,
           prospectSequenceStatusId,
           messageId,
-          messageContent: content,
+          messageContent: prefixedContent,
           scheduledFor: scheduledDate,
           priority,
           status: 'queued'

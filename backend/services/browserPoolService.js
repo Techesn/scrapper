@@ -282,7 +282,7 @@ class BrowserPoolService {
     logger.info('Création d\'une nouvelle session de navigateur');
     
     const browser = await puppeteer.launch({
-      headless: false, // Mode visible - meilleur pour éviter la détection
+      headless: true, // Mode visible - meilleur pour éviter la détection
       defaultViewport: null, // Utiliser la taille de fenêtre naturelle
       args: [
         '--no-sandbox',

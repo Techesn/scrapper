@@ -22,7 +22,7 @@ async function searchLinkedInProfileViaBrave(prospectData) {
   
   try {
     // Construction de la requête
-    const query = encodeURIComponent(`${fullName} ${company || ''} ${jobTitle || ''} site:linkedin.com/in`);
+    const query = encodeURIComponent(`"${fullName}" ${company || ''} "${jobTitle || ''}" site:linkedin.com/in`);
     const apiUrl = `https://api.search.brave.com/res/v1/web/search?q=${query}&search_lang=fr`;
     
     // Headers pour l'authentification et le format

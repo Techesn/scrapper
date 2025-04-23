@@ -24,7 +24,7 @@ const launchBrowser = async (temporary = false, forceNewSession = false) => {
       logger.info('Création dune session temporaire forcée (hors pool)');
       
       const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         defaultViewport: null,
         args: [
           '--no-sandbox',
@@ -87,7 +87,7 @@ const launchBrowser = async (temporary = false, forceNewSession = false) => {
     logger.warn('ATTENTION: Fallback à un navigateur hors pool, ce qui peut causer des problèmes de ressources');
     
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       defaultViewport: null,
       args: [
         '--no-sandbox',
