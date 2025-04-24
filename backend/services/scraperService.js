@@ -685,7 +685,8 @@ async _scrapeList(isResume = false) {
         return { 
           scrapedProfiles: scrapedCount,
           reachedLimit: true,
-          totalProfiles: this.totalProspectsCount
+          totalProfiles: this.totalProspectsCount,
+          paused: true // Ajouter ce flag pour indiquer la pause due au quota
         };
       }
       

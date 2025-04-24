@@ -383,11 +383,16 @@ const getSessionProspects = async (req, res) => {
     const limitNum = parseInt(limit, 10);
     const skip = (pageNum - 1) * limitNum;
     
+    // Créer la requête de base
+    let query = Prospect.find({ sessionId: id }).sort({ scrapedAt: -1 });
+
+    // Appliquer la pagination seulement si limit n'est pas -1
+    if (limitNum !== -1) {
+      query = query.skip(skip).limit(limitNum);
+    }
+    
     // Récupérer les prospects de la session
-    const prospects = await Prospect.find({ sessionId: id })
-      .sort({ scrapedAt: -1 })
-      .skip(skip)
-      .limit(limitNum);
+    const prospects = await query;
     
     // Compter le nombre total de prospects pour la pagination
     const total = await Prospect.countDocuments({ sessionId: id });

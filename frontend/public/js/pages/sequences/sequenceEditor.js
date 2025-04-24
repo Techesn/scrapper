@@ -811,7 +811,8 @@ if (btnAddProspects) {
         prospectsList.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin"></i> Chargement des prospects...</div>';
         prospectsContainer.classList.remove('hidden');
         
-        const prospectsResponse = await fetch(`/api/sessions/${sessionId}/prospects`);
+        // Ajouter ?limit=-1 pour récupérer tous les prospects
+        const prospectsResponse = await fetch(`/api/sessions/${sessionId}/prospects?limit=-1`);
         const prospectsData = await prospectsResponse.json();
         
         if (prospectsData.success) {
