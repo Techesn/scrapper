@@ -13,5 +13,7 @@ router.post('/:id/resume', sessionController.resumeSession);
 router.post('/:id/stop', sessionController.stopSession);
 router.get('/stats', sessionController.getSessionStats);
 
+// Route pour supprimer une session
+router.delete('/:id', sessionController.deleteSession);
 
 module.exports = router;

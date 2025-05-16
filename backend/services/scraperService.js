@@ -696,9 +696,19 @@ async _scrapeList(isResume = false) {
         // Scroll et mise en vue du prospect
         await this._scrollToProspect(prospectRow);
         
+        // Délai aléatoire après scroll
+        let shortDelay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+        logger.info(`⏳ Délai action (scroll): ${Math.round(shortDelay / 1000)}s`);
+        await puppeteerUtils.waitForTimeout(this.page, shortDelay);
+
         // 1. Extraire les données de base du tableau
         const basicData = await this._extractBasicDataFromRow(prospectRow, i+1);
         
+        // Délai aléatoire après extraction données de base
+        shortDelay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+        logger.info(`⏳ Délai action (basic data): ${Math.round(shortDelay / 1000)}s`);
+        await puppeteerUtils.waitForTimeout(this.page, shortDelay);
+
         // 2. Ouvrir la modale et extraire les données détaillées
         const isModalOpened = await this._clickProfileName(prospectRow, i+1);
         let detailedData = {};
@@ -709,8 +719,19 @@ async _scrapeList(isResume = false) {
           
           // Passer les données de base pour la recherche LinkedIn si nécessaire
           detailedData = await this._extractDetailedDataFromModal(basicData);
+          
+          // Délai aléatoire après extraction données modale
+          shortDelay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+          logger.info(`⏳ Délai action (modal data): ${Math.round(shortDelay / 1000)}s`);
+          await puppeteerUtils.waitForTimeout(this.page, shortDelay);
+          
           await this._closeProspectModal();
           
+          // Délai aléatoire après fermeture modale
+          shortDelay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+          logger.info(`⏳ Délai action (close modal): ${Math.round(shortDelay / 1000)}s`);
+          await puppeteerUtils.waitForTimeout(this.page, shortDelay);
+
           // Après avoir extrait les données détaillées, mettre à jour le nom du dernier prospect
           if (basicData.firstName && basicData.lastName) {
             this.lastProspectName = `${basicData.firstName} ${basicData.lastName}`;
@@ -766,8 +787,12 @@ async _scrapeList(isResume = false) {
           }
         }
         
-        // Délai entre les profils
-        await puppeteerUtils.waitForTimeout(this.page, 1500);
+        // Délai aléatoire entre les profils pour simuler un comportement humain
+        const minDelay = 15000; // 15 secondes
+        const maxDelay = 25000; // 25 secondes
+        const randomWait = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+        logger.info(`⏳ Ajout d'un délai aléatoire de ${Math.round(randomWait / 1000)} secondes...`);
+        await puppeteerUtils.waitForTimeout(this.page, randomWait);
         
       } catch (error) {
         logger.error(`❌ Erreur lors du traitement du prospect ${i+1} de la page ${currentPage}:`, {

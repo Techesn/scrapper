@@ -325,15 +325,15 @@ class ConnectionManager {
         }
       }
 
-      // 3) Si on n’a pas trouvé de bouton direct => on cherche le bouton “Se connecter” dans le menu “...”
+      // 3) Si on n'a pas trouvé de bouton direct => on cherche le bouton "Se connecter" dans le menu "..."
       if (!connectButton) {
         logger.info('Aucun bouton direct "Se connecter" (icône connect-small). On tente le menu "..."');
 
-        // 3a) Tenter de cliquer sur le déclencheur du menu (aria-label="Plus d’actions", ou id$="-profile-overflow-action")
+        // 3a) Tenter de cliquer sur le déclencheur du menu (aria-label="Plus d'actions", ou id$="-profile-overflow-action")
         try {
-          const moreActionsTrigger = await container.$('button[aria-label*="Plus d’actions"], button[id$="profile-overflow-action"]');
+          const moreActionsTrigger = await container.$('button[aria-label*="Plus d\'actions"], button[id$="profile-overflow-action"]');
           if (moreActionsTrigger) {
-            // Premier clic sur “...”
+            // Premier clic sur "..."
             logger.info('Bouton "..." cliqué pour ouvrir le menu');
             // Au lieu de .click() direct, on peut tenter un evaluate
             await page.evaluate(el => el.click(), moreActionsTrigger);
@@ -345,7 +345,7 @@ class ConnectionManager {
           logger.warn('Pas de bouton "..." ou erreur de clic: ' + e.message);
         }
 
-        // 3b) Parcourir les items du dropdown pour trouver un item “Se connecter” (icône connect-medium)
+        // 3b) Parcourir les items du dropdown pour trouver un item "Se connecter" (icône connect-medium)
         const menuItems = await container.$$('.artdeco-dropdown__item, div[role="button"]');
         for (const item of menuItems) {
           const text = await page.evaluate(el => el.textContent.trim(), item);
@@ -354,7 +354,7 @@ class ConnectionManager {
 
           // Conditions :
           // - le texte OU l'aria-label contient "Se connecter" ou "Invitez X à rejoindre votre réseau"
-          // - il y a l’icône #connect-medium
+          // - il y a l'icône #connect-medium
           if (
             (text.includes('Se connecter') || ariaLabel.includes('Invitez') || ariaLabel.includes('Se connecter')) &&
             hasIconMedium
@@ -379,7 +379,7 @@ class ConnectionManager {
         };
       }
 
-      // 5) Cliquer sur ce bouton / item “Se connecter”
+      // 5) Cliquer sur ce bouton / item "Se connecter"
       logger.info('Tentative de clic sur "Se connecter"');
       await page.evaluate(el => el.click(), connectButton);
 
@@ -493,8 +493,7 @@ class ConnectionManager {
       }
       await sleep(1000)
       // 6) Saisir le texte
-      const message = `Bonjour ${firstName},\nLe secteur de l'IT et de la tech évolue rapidement, et j’aime rester connecté avec des professionnels passionnés. Je vous propose de rejoindre mon réseau pour de futurs échanges et collaborations.
-Bien cordialement, Hugo, Top Profil `;
+      const message = `Bonjour ${firstName},\nLe secteur de l'IT et de la tech évolue rapidement, et j'aime rester connecté avec des professionnels passionnés. Je vous propose de rejoindre mon réseau pour de futurs échanges et collaborations.\nBien cordialement, Hugo, Top Profil`;
 
       // On remplit la zone #custom-message
       try {
@@ -648,7 +647,7 @@ Bien cordialement, Hugo, Top Profil `;
         status: 'pending',
         scheduledAt: { $lte: new Date() }
       })
-        .limit(10)
+        .limit(2)
         .populate({
           path: 'prospectId',
           select: 'firstName lastName email linkedinProfileUrl connectionStatus'
@@ -679,9 +678,17 @@ Bien cordialement, Hugo, Top Profil `;
           break;
         }
 
+        let shortDelay = getRandomDelay(3000, 7000);
+        logger.info(`⏳ Délai action (ConnMgr - Start): ${Math.round(shortDelay / 1000)}s`);
+        await sleep(shortDelay);
+
         request.status = 'processing';
         request.processingStartedAt = new Date();
         await request.save();
+
+        shortDelay = getRandomDelay(3000, 7000);
+        logger.info(`⏳ Délai action (ConnMgr - Pre-Send): ${Math.round(shortDelay / 1000)}s`);
+        await sleep(shortDelay);
 
         const prospect = request.prospectId;
         const result = await this._sendRealConnectionRequestWithPage(
@@ -689,6 +696,10 @@ Bien cordialement, Hugo, Top Profil `;
           prospect.linkedinProfileUrl,
           prospect.firstName
         );
+
+        shortDelay = getRandomDelay(3000, 7000);
+        logger.info(`⏳ Délai action (ConnMgr - Post-Send): ${Math.round(shortDelay / 1000)}s`);
+        await sleep(shortDelay);
 
         if (result.success) {
           let statusToUpdate = 'invitation_sent';
@@ -707,6 +718,10 @@ Bien cordialement, Hugo, Top Profil `;
 
           await DailyStats.incrementConnectionRequestsSent();
 
+          shortDelay = getRandomDelay(3000, 7000);
+          logger.info(`⏳ Délai action (ConnMgr - Pre-Sent): ${Math.round(shortDelay / 1000)}s`);
+          await sleep(shortDelay);
+
           request.status = 'sent';
           request.completedAt = new Date();
           await request.save();
@@ -723,6 +738,10 @@ Bien cordialement, Hugo, Top Profil `;
             lastConnectionCheckAt: new Date(),
             connectionError: result.error
           });
+
+          shortDelay = getRandomDelay(3000, 7000);
+          logger.info(`⏳ Délai action (ConnMgr - Pre-Failed): ${Math.round(shortDelay / 1000)}s`);
+          await sleep(shortDelay);
 
           request.status = 'failed';
           request.error = result.error;

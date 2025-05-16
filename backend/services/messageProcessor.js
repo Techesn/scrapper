@@ -6,6 +6,7 @@ const DailyStats = require('../models/dailyStats');
 const logger = require('../utils/logger');
 const AppSettings = require('../models/AppSettings');
 const timeService = require('../services/timeService');
+const { sleep } = require('../utils/puppeteerUtils');
 
 /**
  * Service de traitement des messages de la file d'attente
@@ -140,6 +141,11 @@ class MessageProcessor {
         return false;
       }
       
+      // Délai avant de récupérer le message
+      let shortDelay = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+      logger.info(`⏳ Délai action (MsgProc - Pre-GetNext): ${Math.round(shortDelay / 1000)}s`);
+      await sleep(shortDelay);
+
       // Récupérer le prochain message à traiter
       const message = await queueManager.getNextMessage();
       
@@ -183,15 +189,31 @@ class MessageProcessor {
       // Récupérer le prénom pour la personnalisation
       // Utiliser 'Prospect' comme fallback si le prénom n'est pas disponible
       const firstName = message.prospectId.firstName || '';
-      const greeting = `Bonjour ${firstName},\nJ'espère que vous allez bien\n\n`;
+      const greeting = `Bonjour ${firstName},\nJ\'espère que vous allez bien\n\n`;
       const fullMessageContent = greeting + message.messageContent;
+
+      // Délai avant l'envoi
+      shortDelay = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+      logger.info(`⏳ Délai action (MsgProc - Pre-Send): ${Math.round(shortDelay / 1000)}s`);
+      await sleep(shortDelay);
 
       // Envoyer le message
       const result = await messageService.sendMessage(profileUrl, fullMessageContent);
       
+      // Délai après l'envoi
+      shortDelay = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+      logger.info(`⏳ Délai action (MsgProc - Post-Send): ${Math.round(shortDelay / 1000)}s`);
+      await sleep(shortDelay);
+
       // Mettre à jour le statut du message
       if (result.success) {
         // Message envoyé avec succès
+        
+        // Délai avant mise à jour statut (Succès)
+        shortDelay = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+        logger.info(`⏳ Délai action (MsgProc - Pre-Sent): ${Math.round(shortDelay / 1000)}s`);
+        await sleep(shortDelay);
+        
         await queueManager.updateMessageStatus(message._id, 'sent');
         
         // Mettre à jour le statut du prospect dans la séquence
@@ -225,7 +247,13 @@ class MessageProcessor {
         return true;
       } else {
         // Échec de l'envoi
-        logger.error(`Échec de l'envoi du message ${message._id}: ${result.error}`);
+        logger.error(`Échec de l\'envoi du message ${message._id}: ${result.error}`);
+        
+        // Délai avant mise à jour statut (Échec)
+        shortDelay = Math.floor(Math.random() * (7000 - 3000 + 1)) + 3000;
+        logger.info(`⏳ Délai action (MsgProc - Pre-Failed): ${Math.round(shortDelay / 1000)}s`);
+        await sleep(shortDelay);
+        
         // Marquer le message comme échoué au lieu de le laisser en file d'attente
         await queueManager.updateMessageStatus(message._id, 'failed', result.error);
         return false;

@@ -416,6 +416,38 @@ const getSessionProspects = async (req, res) => {
   }
 };
 
+/**
+ * Supprime une session et ses prospects
+ * @param {Object} req - Requête Express
+ * @param {Object} res - Réponse Express
+ */
+const deleteSession = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const result = await sessionService.deleteSessionAndProspects(id);
+    
+    if (!result.deletedSession) {
+      return res.status(404).json({
+        success: false,
+        message: `Session ${id} non trouvée.`
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      message: `Session ${id} et ${result.deletedProspectsCount} prospects supprimés avec succès.`
+    });
+    
+  } catch (error) {
+    logger.error(`Erreur lors de la suppression de la session: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      message: `Erreur lors de la suppression de la session: ${error.message}`
+    });
+  }
+};
+
 module.exports = {
   getSessions,
   getSession,
@@ -425,5 +457,6 @@ module.exports = {
   resumeSession,
   stopSession,
   getSessionStats,
-  getSessionProspects
+  getSessionProspects,
+  deleteSession
 };

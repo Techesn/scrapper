@@ -245,6 +245,37 @@ class SessionService {
       return { byType: [], activeSessions: 0, recentSessions: [] };
     }
   }
+  
+  /**
+   * Supprime une session et tous les prospects associés
+   * @param {string} sessionId - ID de la session à supprimer
+   * @returns {Promise<{deletedProspectsCount: number, deletedSession: boolean}>} Résultat de la suppression
+   */
+  async deleteSessionAndProspects(sessionId) {
+    try {
+      logger.info(`Tentative de suppression de la session ${sessionId} et de ses prospects`);
+      
+      // 1. Supprimer les prospects associés à la session
+      const prospectDeletionResult = await Prospect.deleteMany({ sessionId: sessionId });
+      const deletedProspectsCount = prospectDeletionResult.deletedCount;
+      logger.info(`${deletedProspectsCount} prospects supprimés pour la session ${sessionId}`);
+      
+      // 2. Supprimer la session elle-même
+      const sessionDeletionResult = await Session.findByIdAndDelete(sessionId);
+      
+      if (!sessionDeletionResult) {
+        logger.warn(`Session ${sessionId} non trouvée lors de la tentative de suppression.`);
+        return { deletedProspectsCount, deletedSession: false };
+      }
+      
+      logger.info(`Session ${sessionId} supprimée avec succès`);
+      return { deletedProspectsCount, deletedSession: true };
+      
+    } catch (error) {
+      logger.error(`Erreur lors de la suppression de la session ${sessionId}: ${error.message}`, { stack: error.stack });
+      throw error;
+    }
+  }
 }
 
 module.exports = new SessionService();

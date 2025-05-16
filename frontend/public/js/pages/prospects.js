@@ -77,6 +77,9 @@ async function loadSessions(container) {
               <button id="export-csv" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center">
                 <i class="fas fa-file-csv mr-2"></i> Exporter CSV
               </button>
+              <button id="delete-session-btn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 flex items-center">
+                <i class="fas fa-trash-alt mr-2"></i> Supprimer
+              </button>
               <div class="relative">
                 <input type="text" id="search-input" 
                   class="px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -298,6 +301,54 @@ function attachProspectsEventListeners(container) {
         pageSize = newPageSize;
         currentPage = 1;
         loadProspects(prospectsTableBody, paginationContainer);
+      }
+    });
+  }
+
+  // Bouton Supprimer Session
+  const deleteButton = container.querySelector('#delete-session-btn');
+  if (deleteButton) {
+    deleteButton.addEventListener('click', async () => {
+      if (!currentSessionId) {
+        alert('Aucune session sélectionnée.');
+        return;
+      }
+      
+      // Demander confirmation
+      const confirmation = confirm(
+        `Êtes-vous sûr de vouloir supprimer cette session et tous les prospects associés ?\n\nSession ID: ${currentSessionId}\n\nCette action est irréversible.`
+      );
+      
+      if (!confirmation) {
+        return; // L'utilisateur a annulé
+      }
+      
+      try {
+        // Appel API pour supprimer la session
+        const response = await fetch(`/api/sessions/${currentSessionId}`, {
+          method: 'DELETE',
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          alert(data.message || 'Session supprimée avec succès.');
+          
+          // Cacher la section des prospects
+          const prospectsSection = container.querySelector('#prospects-section');
+          if (prospectsSection) {
+            prospectsSection.style.display = 'none';
+          }
+          
+          // Optionnel : Recharger la liste des sessions pour la mettre à jour
+          // await loadSessions(container); 
+          
+        } else {
+          throw new Error(data.message || 'Erreur lors de la suppression de la session');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la session:', error);
+        alert(`Erreur lors de la suppression de la session: ${error.message}`);
       }
     });
   }
